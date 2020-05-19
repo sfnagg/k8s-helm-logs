@@ -54,11 +54,10 @@ __not_ready() {
     local not_ready=""
     local text="of first not-ready pod"
 
-    not_ready=$(kubectl -n "$ns" get po -lrelease="$release" --no-headers | grep "^$2" | grep -v "^$job_name" \
-        | awk -F' *|/' '$2 != $3 || $4 != "Running" { print $1; exit }')
+    not_ready=$(kubectl -n "$ns" get po -lrelease="$release" -o=go-template --template='{{range $i := .items}}{{range .status.containerStatuses}}{{if not .ready}}{{$i.metadata.name}}{{"\n"}}{{end}}{{end}}{{end}}') 
 
     if [[ -n "$not_ready" ]]; then
-        printf '\033[1;31m%s\033[1;35m' "$1 ${2}: events ${text}: "
+        printf '\033[1;31m%s\033[1;35m' "$1 ${2}: events: "
         printf -- '-%.0s' {1..80}
         printf '\033[0m\n'
         __events
@@ -71,7 +70,7 @@ __not_ready() {
 }
 
 __events() {
-    kubectl -n "$ns" get events --field-selector involvedObject.name="$not_ready" || :
+    kubectl -n "$ns" get events --field-selector involvedObject.kind=Pod,type=Warning --sort-by='.lastTimestamp' || :
 }
 
 __logs() {
