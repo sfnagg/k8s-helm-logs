@@ -55,10 +55,6 @@ __not_ready() {
     not_ready=$(kubectl -n "$ns" get po -lrelease="$release" -o=go-template --template='{{range $i := .items}}{{range .status.containerStatuses}}{{if not .ready}}{{$i.metadata.name}}{{"\n"}}{{end}}{{end}}{{end}}') 
 
     if [[ -n "$not_ready" ]]; then
-        printf '\033[1;31m%s\033[1;35m' "$1 ${2}: events: "
-        printf -- '-%.0s' {1..80}
-        printf '\033[0m\n'
-        __events
 
         printf '\033[1;31m%s\033[1;35m' "$1 ${2}: logs ${text}: "
         printf -- '-%.0s' {1..82}
