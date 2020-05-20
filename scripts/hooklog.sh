@@ -18,12 +18,6 @@ _main() {
         _help; false
     fi
 
-    if [[ "${3:-NOP}" != NOP ]]; then
-        local job_name="$3"
-    else
-        _help; false
-    fi
-
     printf '\033[1;31m%s\033[1;35m' "Get pods status:"
     printf -- '-%.0s' {1..115}
     printf '\033[0m\n'
@@ -83,7 +77,7 @@ _except() {
 }
 
 _help() {
-    echo "Usage: $0 <metadata.namespace> <metadata.labels.release> <metadata.name>" >&2
+    echo "Usage: $0 <metadata.namespace> <metadata.labels.release>" >&2
 }
 
 _main "$@"
