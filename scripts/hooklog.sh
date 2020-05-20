@@ -63,8 +63,9 @@ __not_ready() {
     if [[ -n "$not_ready" ]]; then
 
         printf '\033[1;31m%s\033[1;35m' "$1 ${2}: logs ${text}: "
-        printf '\033[1;31m%s\033[1;35m' "$not_ready"
         printf -- '-%.0s' {1..82}
+        printf '\033[0m\n'
+        printf '\033[1;31m%s\033[1;35m' "$not_ready"
         printf '\033[0m\n'
         __logs
     fi
