@@ -18,12 +18,6 @@ _main() {
         _help; false
     fi
 
-    if [[ "${3:-NOP}" != NOP ]]; then
-        local job_name="$3"
-    else
-        _help; false
-    fi
-
     printf '\033[1;31m%s\033[1;35m' "Get pods status: "
     printf -- '-%.0s' {1..115}
     printf '\033[0m\n'
@@ -50,6 +44,10 @@ _main() {
     exit 0
 }
 
+__events() {
+    kubectl -n "$ns" get events --field-selector involvedObject.kind=Pod,type=Warning --sort-by='.lastTimestamp' || :
+}
+
 __not_ready() {
     local not_ready=""
     local text="of first not-ready pod"
@@ -67,10 +65,6 @@ __not_ready() {
         printf '\033[0m\n'
         __logs
     fi
-}
-
-__events() {
-    kubectl -n "$ns" get events --field-selector involvedObject.kind=Pod,type=Warning --sort-by='.lastTimestamp' || :
 }
 
 __logs() {
