@@ -22,6 +22,10 @@ _main() {
     printf -- '-%.0s' {1..115}
     printf '\033[0m\n'
     kubectl -n "$ns" get po -lrelease="$release" -o wide
+    printf '\033[1;31m%s\033[1;35m' "Get pods status: "
+    printf -- '-%.0s' {1..115}
+    printf '\033[0m\n'
+    kubectl -n "$ns" get events --field-selector involvedObject.kind=Pod,type=Warning --sort-by='.lastTimestamp'
 
     local -a Daemonsets=() Deployments=() Statefulsets=()
 
@@ -42,10 +46,6 @@ _main() {
     done
 
     exit 0
-}
-
-__events() {
-    kubectl -n "$ns" get events --field-selector involvedObject.kind=Pod,type=Warning --sort-by='.lastTimestamp' || :
 }
 
 __not_ready() {
