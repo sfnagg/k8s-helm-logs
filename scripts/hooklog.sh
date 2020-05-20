@@ -18,6 +18,12 @@ _main() {
         _help; false
     fi
 
+    if [[ "${3:-NOP}" != NOP ]]; then
+        local job_name="$3"
+    else
+        _help; false
+    fi
+
     printf '\033[1;31m%s\033[1;35m' "Get pods status:"
     printf -- '-%.0s' {1..115}
     printf '\033[0m\n'
@@ -52,7 +58,7 @@ __not_ready() {
     local not_ready=""
     local text="of first not-ready pod"
 
-    not_ready=$(kubectl -n "$ns" get po -lrelease="$release" -o=go-template --template='{{range $i := .items}}{{range .status.containerStatuses}}{{if not .ready}}{{$i.metadata.name}}{{"\n"}}{{end}}{{end}}{{end}}') 
+    not_ready=$(kubectl -n "$ns" get po -lrelease="$release" -o=go-template --template='{{range $i := .items}}{{range .status.containerStatuses}}{{if not .ready}}{{printf "%s\n" $i.metadata.name}}{{end}}{{end}}{{end}}' | grep -v "^$job_name" | head -n 1)
 
     if [[ -n "$not_ready" ]]; then
 
