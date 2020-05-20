@@ -58,11 +58,12 @@ __not_ready() {
     local not_ready=""
     local text="of first not-ready pod"
 
-    not_ready=$(kubectl -n "$ns" get po -lrelease="$release" -o=go-template --template='{{range $i := .items}}{{range .status.containerStatuses}}{{if not .ready}}{{printf "%s\n" $i.metadata.name}}{{end}}{{end}}{{end}}' | grep -v "^$job_name" | head -n 1)
+    not_ready=$(kubectl -n "$ns" get po -lrelease="$release" -o=go-template --template='{{range $i := .items}}{{range .status.containerStatuses}}{{if not .ready}}{{printf "%s\n" $i.metadata.name}}{{end}}{{end}}{{end}}' | head -n 1)
 
     if [[ -n "$not_ready" ]]; then
 
         printf '\033[1;31m%s\033[1;35m' "$1 ${2}: logs ${text}: "
+        printf '\033[1;31m%s\033[1;35m' "$not_ready"
         printf -- '-%.0s' {1..82}
         printf '\033[0m\n'
         __logs
