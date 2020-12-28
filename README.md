@@ -1,3 +1,5 @@
+![](https://travis-ci.com/sfnagg/k8s-helm-logs.svg?branch=master)
+
 # k8s-helm-logs
 
 Based on alpine
