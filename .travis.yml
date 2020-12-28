@@ -2,7 +2,7 @@ sudo: required
 
 env:
   DOCKER_IMAGE=sfnagg/k8s-helm-logs
-  DOCKER_TAG=v1.1.9
+  TRAVIS_TAG=v1.1.9
 
 services:
   - docker
