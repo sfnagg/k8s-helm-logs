@@ -1,8 +1,8 @@
 sudo: required
 
 # Only build tags
-if: 
-  tag IS present
+#if: 
+#  tag IS present
 
 env:
   DOCKER_IMAGE=sfnagg/k8s-helm-logs
