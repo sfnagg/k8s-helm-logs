@@ -11,7 +11,7 @@ if:
   tag IS present
 
 before_script:
-  - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 script:
   - docker build -t $DOCKER_IMAGE .
